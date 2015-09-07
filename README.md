@@ -1,4 +1,4 @@
-# Expect
+# Matchi::Fix
 
 [![Build Status](https://travis-ci.org/fixrb/matchi-fix.svg?branch=master)][travis]
 [![Gem Version](https://badge.fury.io/rb/matchi-fix.svg)][gem]
