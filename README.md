@@ -47,8 +47,8 @@ built Gem they can be used for basic integrity verification purposes.
 The checksum of a file can be checked using the `sha512sum` command.  For
 example:
 
-    $ sha512sum pkg/matchi-fix-0.0.1.gem
-    8c72ec1d93577cf57eaaea04d66287f18673f39cb886452cf7044195c03a77d03a5226a6b033cc6a0992721c7aefcb64c6daca463e7e0b5059901886dfc3cfb2  pkg/matchi-fix-0.0.1.gem
+    $ sha512sum pkg/matchi-fix-0.1.0.gem
+    0decb77665ae868584aedab6ef126c7ce4efa69bf1fab75215ee9686b16525f8d7a45e03dc3145cb320371d8ddf2ffff90de34f5778fe55b11ce4cb4996a7f5a  pkg/matchi-fix-0.1.0.gem
 
 ## Versioning
 
