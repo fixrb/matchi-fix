@@ -29,7 +29,7 @@ module Matchi
     #
     # @return [Boolean] The result of the test which can be _pass_ or _fail_.
     def matches?
-      ::Fix.describe(yield, &@expected)
+      ::Fix.describe(yield, verbose: false, &@expected)
     rescue SystemExit => e
       e.success?
     end
