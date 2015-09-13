@@ -33,6 +33,8 @@ The `HighSecurity` trust profile will verify all gems.  All of __Matchi::Fix__'s
 ## Usage
 
 ```ruby
+require 'matchi/fix'
+
 fix = Matchi.fetch(:Fix, proc { it { MUST Equal: 42 } })
 fix.matches? { 6 * 7 } # => true
 ```
