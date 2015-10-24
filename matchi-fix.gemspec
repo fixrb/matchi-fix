@@ -1,12 +1,12 @@
 Gem::Specification.new do |spec|
-  spec.name          = 'matchi-rspec'
+  spec.name          = 'matchi-fix'
   spec.version       = File.read('VERSION.semver').chomp
   spec.authors       = ['Cyril Wack']
   spec.email         = ['contact@cyril.email']
 
-  spec.summary       = "Extend Matchi matchers with Rspec's ones."
-  spec.description   = 'Matchi extension gem to provide the Rspec matchers.'
-  spec.homepage      = 'https://github.com/fixrb/matchi-rspec'
+  spec.summary       = 'Fix expectation matcher.'
+  spec.description   = 'A Fix expectation matcher for Matchi.'
+  spec.homepage      = 'https://github.com/fixrb/matchi-fix'
   spec.license       = 'MIT'
 
   spec.files         =
@@ -15,6 +15,7 @@ Gem::Specification.new do |spec|
   spec.require_paths = ['lib']
 
   spec.add_dependency 'matchi',                 '~> 0.0'
+  spec.add_dependency 'fix',                    '~> 0.15'
 
   spec.add_development_dependency 'bundler',    '~> 1.10'
   spec.add_development_dependency 'rake',       '~> 10.4'

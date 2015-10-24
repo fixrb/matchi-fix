@@ -2,7 +2,7 @@
 
 require 'digest/sha2'
 
-gemname         = 'matchi-rspec'.to_sym
+gemname         = 'matchi-fix'.to_sym
 ARGV[0]         = File.read('VERSION.semver').chomp if ARGV[0].nil?
 built_gem_path  = "pkg/#{gemname}-#{ARGV[0]}.gem"
 checksum        = Digest::SHA512.new.hexdigest(File.read(built_gem_path))
