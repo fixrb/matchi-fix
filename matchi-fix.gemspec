@@ -4,8 +4,8 @@ Gem::Specification.new do |spec|
   spec.authors       = ['Cyril Wack']
   spec.email         = ['contact@cyril.email']
 
-  spec.summary       = "Extend Matchi matchers with RSpec's ones."
-  spec.description   = 'Matchi extension gem to provide the RSpec matchers.'
+  spec.summary       = "Extend Matchi matchers with Rspec's ones."
+  spec.description   = 'Matchi extension gem to provide the Rspec matchers.'
   spec.homepage      = 'https://github.com/fixrb/matchi-rspec'
   spec.license       = 'MIT'
 
