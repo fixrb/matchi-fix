@@ -20,7 +20,7 @@ module Matchi
     end
 
     # @example Is it equal to 42?
-    #   fix = Matchi::Fix.new(proc { it { MUST Equal: 42 } })
+    #   fix = Matchi::Fix.new(proc { it { MUST equal 42 } })
     #   fix.matches? { 6 * 7 } # => true
     #
     # @api public
@@ -32,6 +32,21 @@ module Matchi
       ::Fix.describe(yield, verbose: false, &@expected)
     rescue SystemExit => e
       e.success?
+    end
+
+    # Returns a string representing the matcher.
+    #
+    # @return [String] A string representing the matcher.
+    def to_s
+      "fix #{@expected.inspect}"
+    end
+
+    # Returns a hash of one key-value pair with a key corresponding to the
+    #   matcher and a value corresponding to its initialize parameters.
+    #
+    # @return [Hash] A hash of one key-value pair.
+    def to_h
+      { Fix: [@expected] }
     end
   end
 end
