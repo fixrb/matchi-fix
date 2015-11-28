@@ -35,7 +35,7 @@ The `HighSecurity` trust profile will verify all gems.  All of __Matchi::Fix__'s
 ```ruby
 require 'matchi/fix'
 
-fix = Matchi::Fix.new(proc { it { MUST equal 42 } }) # => #<Matchi::Fix:0x007fe4ba2cc530 @expected=#<Proc:0x007fe4ba2cc558@(irb):3>>
+fix = Matchi::Matchers::Fix::Matcher.new(proc { it { MUST equal 42 } }) #<Matchi::Matchers::Fix::Matcher:0x007fd4022dd6c8 @expected=#<Proc:0x007fd4022dd6f0@(irb):1>>
 fix.matches? { 6 * 7 } # => true
 ```
 
