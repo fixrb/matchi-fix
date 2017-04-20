@@ -4,7 +4,7 @@ require_relative File.join '..', 'lib', 'matchi', 'fix'
 expected = proc { it { MUST equal 42 } }
 
 # It is expected to be true
-fail unless Matchi::Matchers::Fix::Matcher.new(expected).matches? { 6 * 7 }
+raise unless Matchi::Matchers::Fix::Matcher.new(expected).matches? { 6 * 7 }
 
 # It is expected to be false
-fail if Matchi::Matchers::Fix::Matcher.new(expected).matches? { 4 }
+raise if Matchi::Matchers::Fix::Matcher.new(expected).matches? { 4 }
