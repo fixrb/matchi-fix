@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'matchi/matchers_base'
 require 'fix'
 

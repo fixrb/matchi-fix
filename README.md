@@ -2,7 +2,6 @@
 
 [![Build Status](https://travis-ci.org/fixrb/matchi-fix.svg?branch=master)][travis]
 [![Code Climate](https://codeclimate.com/github/fixrb/matchi-fix/badges/gpa.svg)][codeclimate]
-[![Dependency Status](https://gemnasium.com/fixrb/matchi-fix.svg)][gemnasium]
 [![Gem Version](https://badge.fury.io/rb/matchi-fix.svg)][gem]
 [![Inline docs](http://inch-ci.org/github/fixrb/matchi-fix.svg?branch=master)][inchpages]
 [![Documentation](http://img.shields.io/:yard-docs-38c800.svg)][rubydoc]
