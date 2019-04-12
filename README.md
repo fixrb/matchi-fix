@@ -22,14 +22,19 @@
 
 ## Installation
 
-__Matchi::Fix__ is cryptographically signed.
+Add this line to your application's Gemfile:
 
-To be sure the gem you install hasn't been tampered with, add my public key (if you haven't already) as a trusted certificate:
+```ruby
+gem 'matchi-fix'
+```
 
-    $ gem cert --add <(curl -Ls https://raw.github.com/fixrb/matchi-fix/master/certs/gem-fixrb-public_cert.pem)
-    $ gem install matchi-fix -P HighSecurity
+And then execute:
 
-The `HighSecurity` trust profile will verify all gems.  All of __Matchi::Fix__'s dependencies are signed.
+    $ bundle
+
+Or install it yourself as:
+
+    $ gem install matchi-fix
 
 ## Usage
 
@@ -80,4 +85,4 @@ See `LICENSE.md` file.
 
 This project is sponsored by:
 
-[![Sashite](http://sashite.com/img/sashite.png)](http://sashite.com/)
+[![Sashite](https://sashite.com/img/sashite.png)](https://sashite.com/)
