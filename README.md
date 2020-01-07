@@ -1,24 +1,12 @@
 # Matchi::Fix
 
-[![Build Status](https://travis-ci.org/fixrb/matchi-fix.svg?branch=master)][travis]
+[![Build Status](https://api.travis-ci.org/fixrb/matchi-fix.svg?branch=master)][travis]
 [![Code Climate](https://codeclimate.com/github/fixrb/matchi-fix/badges/gpa.svg)][codeclimate]
 [![Gem Version](https://badge.fury.io/rb/matchi-fix.svg)][gem]
-[![Inline docs](http://inch-ci.org/github/fixrb/matchi-fix.svg?branch=master)][inchpages]
-[![Documentation](http://img.shields.io/:yard-docs-38c800.svg)][rubydoc]
+[![Inline docs](https://inch-ci.org/github/fixrb/matchi-fix.svg?branch=master)][inchpages]
+[![Documentation](https://img.shields.io/:yard-docs-38c800.svg)][rubydoc]
 
 > A [Fix](https://github.com/fixrb/fix) expectation matcher for [Matchi](https://github.com/fixrb/matchi).
-
-## Contact
-
-* Home page: https://github.com/fixrb/matchi-fix
-* Bugs/issues: https://github.com/fixrb/matchi-fix/issues
-* Support: https://stackoverflow.com/questions/tagged/fixrb
-
-## Rubies
-
-* [MRI](https://www.ruby-lang.org/)
-* [Rubinius](http://rubini.us/)
-* [JRuby](http://jruby.org/)
 
 ## Installation
 
@@ -41,48 +29,40 @@ Or install it yourself as:
 ```ruby
 require 'matchi/fix'
 
-fix = Matchi::Matchers::Fix::Matcher.new(proc { it { MUST equal 42 } }) #<Matchi::Matchers::Fix::Matcher:0x007fd4022dd6c8 @expected=#<Proc:0x007fd4022dd6f0@(irb):1>>
+fix = Matchi::Matcher::Fix.new(proc { it { MUST equal 42 } })
 fix.matches? { 6 * 7 } # => true
 ```
 
-## Security
+## Contact
 
-As a basic form of security __Matchi::Fix__ provides a set of SHA512 checksums for
-every Gem release.  These checksums can be found in the `checksum/` directory.
-Although these checksums do not prevent malicious users from tampering with a
-built Gem they can be used for basic integrity verification purposes.
+* Home page: https://github.com/fixrb/matchi-fix
+* Bugs/issues: https://github.com/fixrb/matchi-fix/issues
 
-The checksum of a file can be checked using the `sha512sum` command.  For
-example:
+## Rubies
 
-    $ sha512sum pkg/matchi-fix-0.1.0.gem
-    0decb77665ae868584aedab6ef126c7ce4efa69bf1fab75215ee9686b16525f8d7a45e03dc3145cb320371d8ddf2ffff90de34f5778fe55b11ce4cb4996a7f5a  pkg/matchi-fix-0.1.0.gem
+* [MRI](https://www.ruby-lang.org/)
+* [Rubinius](https://rubinius.com/)
+* [JRuby](https://www.jruby.org/)
 
 ## Versioning
 
 __Matchi::Fix__ follows [Semantic Versioning 2.0](http://semver.org/).
 
-## Contributing
-
-1. [Fork it](https://github.com/fixrb/matchi-fix/fork)
-2. Create your feature branch (`git checkout -b my-new-feature`)
-3. Commit your changes (`git commit -am 'Add some feature'`)
-4. Push to the branch (`git push origin my-new-feature`)
-5. Create a new Pull Request
-
 ## License
 
-See `LICENSE.md` file.
+The gem is available as open source under the terms of the [MIT License](https://opensource.org/licenses/MIT).
+
+***
+
+<p>
+  This project is sponsored by:<br />
+  <a href="https://sashite.com/"><img
+    src="https://github.com/fixrb/matchi-fix/raw/master/img/sashite.png"
+    alt="Sashite" /></a>
+</p>
 
 [gem]: https://rubygems.org/gems/matchi-fix
 [travis]: https://travis-ci.org/fixrb/matchi-fix
 [codeclimate]: https://codeclimate.com/github/fixrb/matchi-fix
-[gemnasium]: https://gemnasium.com/fixrb/matchi-fix
-[inchpages]: http://inch-ci.org/github/fixrb/matchi-fix
-[rubydoc]: http://rubydoc.info/gems/matchi-fix/frames
-
-***
-
-This project is sponsored by:
-
-[![Sashite](https://sashite.com/img/sashite.png)](https://sashite.com/)
+[inchpages]: https://inch-ci.org/github/fixrb/matchi-fix
+[rubydoc]: https://rubydoc.info/gems/matchi-fix/frames
