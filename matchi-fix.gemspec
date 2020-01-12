@@ -11,7 +11,9 @@ Gem::Specification.new do |spec|
   spec.license       = 'MIT'
   spec.files         = Dir['LICENSE.md', 'README.md', 'lib/**/*']
 
-  spec.add_dependency 'fix',                    '~> 1.0.0.beta1'
+  spec.required_ruby_version = Gem::Requirement.new('>= 2.3.0')
+
+  spec.add_dependency 'fix',                    '~> 1.0.0.beta2'
   spec.add_dependency 'matchi',                 '~> 2.0.0'
 
   spec.add_development_dependency 'bundler',    '~> 2.1'

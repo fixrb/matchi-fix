@@ -35,18 +35,11 @@ fix.matches? { 6 * 7 } # => true
 
 ## Contact
 
-* Home page: https://github.com/fixrb/matchi-fix
-* Bugs/issues: https://github.com/fixrb/matchi-fix/issues
-
-## Rubies
-
-* [MRI](https://www.ruby-lang.org/)
-* [Rubinius](https://rubinius.com/)
-* [JRuby](https://www.jruby.org/)
+* Source code: https://github.com/fixrb/matchi-fix
 
 ## Versioning
 
-__Matchi::Fix__ follows [Semantic Versioning 2.0](http://semver.org/).
+__Matchi::Fix__ follows [Semantic Versioning 2.0](https://semver.org/).
 
 ## License
 
