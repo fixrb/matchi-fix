@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'matchi/matcher/base'
+require "matchi/matcher/base"
 
 # Namespace for the Matchi library.
 module Matchi
@@ -15,6 +15,7 @@ module Matchi
       #
       # @param expected [Proc] A spec.
       def initialize(expected)
+        super()
         @expected = expected
       end
 
@@ -35,4 +36,4 @@ module Matchi
   end
 end
 
-require 'fix'
+require "fix"
