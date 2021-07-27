@@ -8,12 +8,12 @@ Gem::Specification.new do |spec|
   spec.summary      = "Fix expectation matcher."
   spec.description  = "A Fix expectation matcher for Matchi."
   spec.homepage     = "https://github.com/fixrb/matchi-fix"
-  spec.required_ruby_version = Gem::Requirement.new(">= 2.7.0")
+  spec.required_ruby_version = ::Gem::Requirement.new(">= 2.7.0")
   spec.license      = "MIT"
   spec.files        = Dir["LICENSE.md", "README.md", "lib/**/*"]
 
-  spec.add_dependency "fix",    "1.0.0.beta4"
-  spec.add_dependency "matchi", "~> 2.0.1"
+  spec.add_dependency "fix",    "1.0.0.beta7"
+  spec.add_dependency "matchi", "~> 3.2.0"
 
   spec.add_development_dependency "bundler"
   spec.add_development_dependency "rake"

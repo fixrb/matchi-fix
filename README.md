@@ -1,10 +1,10 @@
 # Matchi::Fix
 
-[![Build Status](https://api.travis-ci.org/fixrb/matchi-fix.svg?branch=main)][travis]
-[![Code Climate](https://codeclimate.com/github/fixrb/matchi-fix/badges/gpa.svg)][codeclimate]
-[![Gem Version](https://badge.fury.io/rb/matchi-fix.svg)][gem]
-[![Inline docs](https://inch-ci.org/github/fixrb/matchi-fix.svg?branch=main)][inchpages]
-[![Documentation](https://img.shields.io/:yard-docs-38c800.svg)][rubydoc]
+[![Version](https://img.shields.io/github/v/tag/fixrb/matchi-fix?label=Version&logo=github)](https://github.com/fixrb/matchi-fix/releases)
+[![Yard documentation](https://img.shields.io/badge/Yard-documentation-blue.svg?logo=github)](https://rubydoc.info/github/fixrb/matchi-fix/main)
+[![CI](https://github.com/fixrb/matchi-fix/workflows/CI/badge.svg?branch=main)](https://github.com/fixrb/matchi-fix/actions?query=workflow%3Aci+branch%3Amain)
+[![RuboCop](https://github.com/fixrb/matchi-fix/workflows/RuboCop/badge.svg?branch=main)](https://github.com/fixrb/matchi-fix/actions?query=workflow%3Arubocop+branch%3Amain)
+[![License](https://img.shields.io/github/license/fixrb/matchi-fix?label=License&logo=github)](https://github.com/fixrb/matchi-fix/raw/main/LICENSE.md)
 
 > A [Fix](https://github.com/fixrb/fix) expectation matcher for [Matchi](https://github.com/fixrb/matchi).
 
@@ -18,19 +18,25 @@ gem "matchi-fix"
 
 And then execute:
 
-    $ bundle
+```sh
+bundle
+```
 
 Or install it yourself as:
 
-    $ gem install matchi-fix
+```sh
+gem install matchi-fix
+```
 
 ## Usage
 
 ```ruby
 require "matchi/fix"
 
-fix = Matchi::Matcher::Fix.new(proc { it { MUST equal 42 } })
-fix.matches? { 6 * 7 } # => true
+matcher = Matchi::Fix.new { it MUST be 42 }
+
+matcher.expected        # => #<Fix::Set:0x00007fd96915dc28 ...>
+matcher.matches? { 42 } # => true
 ```
 
 ## Contact
@@ -43,7 +49,7 @@ __Matchi::Fix__ follows [Semantic Versioning 2.0](https://semver.org/).
 
 ## License
 
-The gem is available as open source under the terms of the [MIT License](https://opensource.org/licenses/MIT).
+The [gem](https://rubygems.org/gems/matchi-fix) is available as open source under the terms of the [MIT License](https://opensource.org/licenses/MIT).
 
 ***
 
@@ -53,9 +59,3 @@ The gem is available as open source under the terms of the [MIT License](https:/
     src="https://github.com/fixrb/matchi-fix/raw/main/img/sashite.png"
     alt="Sashite" /></a>
 </p>
-
-[gem]: https://rubygems.org/gems/matchi-fix
-[travis]: https://travis-ci.org/fixrb/matchi-fix
-[codeclimate]: https://codeclimate.com/github/fixrb/matchi-fix
-[inchpages]: https://inch-ci.org/github/fixrb/matchi-fix
-[rubydoc]: https://rubydoc.info/gems/matchi-fix/frames
