@@ -6,24 +6,43 @@ require "fix"
 module Matchi
   # **Fix** matcher.
   class Fix
-    # @return [Proc] A set of specifications.
+    # @return [#test] A set of specifications.
     attr_reader :expected
 
-    # Initialize the matcher with a block of specs.
+    # Initialize the matcher with a behavioral definition.
     #
-    # @example
+    # @example With a block of specifications
     #   require "matchi/fix"
     #
     #   Matchi::Fix.new { it MUST be 42 }
     #
-    # @param block [Proc] A block of code.
-    def initialize(&block)
-      @expected = Fix(&block)
+    # @example With the constant name of the specifications
+    #   require "matchi/fix"
+    #
+    #   Fix :Answer do
+    #     it MUST be 42
+    #   end
+    #
+    #   Matchi::Fix.new(:Answer)
+    #
+    # @param name   [String, Symbol]  The constant name of the specifications.
+    # @param block  [Proc]            A block of specifications.
+    def initialize(name = nil, &block)
+      @expected = if name.nil?
+                    raise ::ArgumentError, "Pass either an argument or a block" unless block
+
+                    Fix(&block)
+                  else
+                    raise ::ArgumentError, "Can't pass both an argument and a block" if block
+
+                    @name = name
+                    ::Fix[name]
+                  end
     end
 
-    # Boolean comparison between the actual value and the expected specs.
+    # Boolean comparison between an actual value and the expected specs.
     #
-    # @example
+    # @example With a block of specifications
     #   require "matchi/fix"
     #
     #   matcher = Matchi::Fix.new { it MUST be 42 }
@@ -31,10 +50,21 @@ module Matchi
     #   matcher.expected        # => #<Fix::Set:0x00007fd96915dc28 ...>
     #   matcher.matches? { 42 } # => true
     #
-    # @yieldreturn [#object_id] The actual value to compare to the expected
-    #   one.
+    # @example With the constant name of the specifications
+    #   require "matchi/fix"
     #
-    # @return [Boolean] Comparison between actual and expected values.
+    #   Fix :Answer do
+    #     it MUST be 42
+    #   end
+    #
+    #   matcher = Matchi::Fix.new(:Answer)
+    #
+    #   matcher.expected        # => #<Fix::Set:0x00007fd96915dc28 ...>
+    #   matcher.matches? { 42 } # => true
+    #
+    # @yieldreturn [#object_id] The value to be compared to the specifications.
+    #
+    # @return [Boolean] Actual value test on specifications.
     def matches?(&block)
       expected.test(log_level: 0, &block)
     rescue ::SystemExit => e
@@ -43,12 +73,18 @@ module Matchi
 
     # A string containing a human-readable representation of the matcher.
     def inspect
-      "#{self.class}(&specs)"
+      "#{self.class}(#{parameter})"
     end
 
     # Returns a string representing the matcher.
     def to_s
-      "fix &specs"
+      "fix #{parameter}"
+    end
+
+    private
+
+    def parameter
+      @name.nil? ? "&specs" : ":#{@name}"
     end
   end
 end

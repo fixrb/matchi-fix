@@ -6,7 +6,7 @@
 [![RuboCop](https://github.com/fixrb/matchi-fix/workflows/RuboCop/badge.svg?branch=main)](https://github.com/fixrb/matchi-fix/actions?query=workflow%3Arubocop+branch%3Amain)
 [![License](https://img.shields.io/github/license/fixrb/matchi-fix?label=License&logo=github)](https://github.com/fixrb/matchi-fix/raw/main/LICENSE.md)
 
-> A [Fix](https://github.com/fixrb/fix) expectation matcher for [Matchi](https://github.com/fixrb/matchi).
+> A [Fix](https://github.com/fixrb/fix) specifications matcher compatible with [Matchi](https://github.com/fixrb/matchi).
 
 ## Installation
 
@@ -30,10 +30,33 @@ gem install matchi-fix
 
 ## Usage
 
+To make __Matchi::Fix__ available:
+
 ```ruby
 require "matchi/fix"
+```
 
+All examples here assume that this has been done.
+
+### With a block of specifications
+
+```ruby
 matcher = Matchi::Fix.new { it MUST be 42 }
+
+matcher.expected        # => #<Fix::Set:0x00007fd96915dc28 ...>
+matcher.matches? { 42 } # => true
+```
+
+### With the constant name of the specifications
+
+If specifications have been defined and named, they can be mentioned:
+
+```ruby
+Fix :Answer do
+  it MUST be 42
+end
+
+matcher = Matchi::Fix.new(:Answer)
 
 matcher.expected        # => #<Fix::Set:0x00007fd96915dc28 ...>
 matcher.matches? { 42 } # => true
@@ -49,7 +72,7 @@ __Matchi::Fix__ follows [Semantic Versioning 2.0](https://semver.org/).
 
 ## License
 
-The [gem](https://rubygems.org/gems/matchi-fix) is available as open source under the terms of the [MIT License](https://opensource.org/licenses/MIT).
+The [gem](https://rubygems.org/gems/matchi-fix) is available as open source under the terms of the [MIT License](https://github.com/fixrb/matchi-fix/raw/main/LICENSE.md).
 
 ***
 

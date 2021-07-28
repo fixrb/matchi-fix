@@ -5,15 +5,15 @@ Gem::Specification.new do |spec|
   spec.version      = File.read("VERSION.semver").chomp
   spec.author       = "Cyril Kato"
   spec.email        = "contact@cyril.email"
-  spec.summary      = "Fix expectation matcher."
-  spec.description  = "A Fix expectation matcher for Matchi."
+  spec.summary      = "Fix specifications matcher."
+  spec.description  = "A Fix specifications matcher compatible with Matchi."
   spec.homepage     = "https://github.com/fixrb/matchi-fix"
   spec.required_ruby_version = ::Gem::Requirement.new(">= 2.7.0")
   spec.license      = "MIT"
   spec.files        = Dir["LICENSE.md", "README.md", "lib/**/*"]
 
   spec.add_dependency "fix",    "1.0.0.beta7"
-  spec.add_dependency "matchi", "~> 3.2.0"
+  spec.add_dependency "matchi", "~> 3.2"
 
   spec.add_development_dependency "bundler"
   spec.add_development_dependency "rake"
