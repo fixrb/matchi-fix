@@ -6,7 +6,7 @@ require "fix"
 module Matchi
   # **Fix** matcher.
   class Fix
-    # @return [#test] A set of specifications.
+    # @return [#against] A set of specifications.
     attr_reader :expected
 
     # Initialize the matcher with a behavioral definition.
@@ -64,9 +64,9 @@ module Matchi
     #
     # @yieldreturn [#object_id] The value to be compared to the specifications.
     #
-    # @return [Boolean] Actual value test on specifications.
+    # @return [Boolean] Determines whether the test has passed or failed.
     def matches?(&block)
-      expected.test(log_level: 0, &block)
+      expected.against(log_level: 0, &block)
     rescue ::SystemExit => e
       e.success?
     end
