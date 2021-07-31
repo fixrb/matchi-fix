@@ -6,7 +6,7 @@
 [![RuboCop](https://github.com/fixrb/matchi-fix/workflows/RuboCop/badge.svg?branch=main)](https://github.com/fixrb/matchi-fix/actions?query=workflow%3Arubocop+branch%3Amain)
 [![License](https://img.shields.io/github/license/fixrb/matchi-fix?label=License&logo=github)](https://github.com/fixrb/matchi-fix/raw/main/LICENSE.md)
 
-> A [Fix](https://github.com/fixrb/fix) specifications matcher compatible with [Matchi](https://github.com/fixrb/matchi).
+> A [Fix](https://github.com/fixrb/fix) specing matcher compatible with [Matchi](https://github.com/fixrb/matchi).
 
 ## Installation
 

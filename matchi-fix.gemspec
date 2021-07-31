@@ -5,8 +5,8 @@ Gem::Specification.new do |spec|
   spec.version      = File.read("VERSION.semver").chomp
   spec.author       = "Cyril Kato"
   spec.email        = "contact@cyril.email"
-  spec.summary      = "Fix specifications matcher."
-  spec.description  = "A Fix specifications matcher compatible with Matchi."
+  spec.summary      = "Fix specing matcher."
+  spec.description  = "A Fix specing matcher compatible with Matchi."
   spec.homepage     = "https://github.com/fixrb/matchi-fix"
   spec.required_ruby_version = ::Gem::Requirement.new(">= 2.7.0")
   spec.license      = "MIT"

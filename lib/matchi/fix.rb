@@ -4,7 +4,7 @@ require "fix"
 
 # Namespace for the Matchi library.
 module Matchi
-  # **Fix** matcher.
+  # **Fix** specing matcher.
   class Fix
     # @return [#against] A set of specifications.
     attr_reader :expected
@@ -28,14 +28,15 @@ module Matchi
     # @param name   [String, Symbol]  The constant name of the specifications.
     # @param block  [Proc]            A block of specifications.
     def initialize(name = nil, &block)
-      @expected = if name.nil?
+      @name = name
+
+      @expected = if unnamed?
                     raise ::ArgumentError, "Pass either an argument or a block" unless block
 
                     Fix(&block)
                   else
                     raise ::ArgumentError, "Can't pass both an argument and a block" if block
 
-                    @name = name
                     ::Fix[name]
                   end
     end
@@ -83,8 +84,12 @@ module Matchi
 
     private
 
+    def unnamed?
+      @name.nil?
+    end
+
     def parameter
-      @name.nil? ? "&specs" : ":#{@name}"
+      unnamed? ? "&specs" : ":#{@name}"
     end
   end
 end
