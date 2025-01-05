@@ -24,6 +24,5 @@ Gem::Specification.new do |spec|
     "rubygems_mfa_required" => "true"
   }
 
-  spec.add_dependency "fix",    "~> 0.21"
-  spec.add_dependency "matchi", "~> 4.1"
+  spec.add_dependency "fix", "~> 0.21"
 end

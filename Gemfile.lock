@@ -1,9 +1,8 @@
 PATH
   remote: .
   specs:
-    matchi-fix (3.0.0)
+    matchi-fix (3.0.1)
       fix (~> 0.21)
-      matchi (~> 4.1)
 
 GEM
   remote: https://rubygems.org/
