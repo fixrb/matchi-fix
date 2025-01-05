@@ -1,9 +1,13 @@
 AllCops:
   NewCops: enable
-  TargetRubyVersion: 2.7
+  TargetRubyVersion: 3.1
 
   Exclude:
-    - test/*.rb
+    - '**/*.md'
+    - '**/*.markdown'
+    - 'benchmark/**/*'
+    - 'spec/**/*'
+    - 'vendor/**/*'
 
 require:
   - rubocop-md
@@ -12,6 +16,11 @@ require:
   - rubocop-thread_safety
 
 Style/StringLiterals:
+  Enabled: true
+  EnforcedStyle: double_quotes
+
+Style/StringLiteralsInInterpolation:
+  Enabled: true
   EnforcedStyle: double_quotes
 
 # We do not need to support Ruby 1.9, so this is good to use.
@@ -23,6 +32,34 @@ Layout/HashAlignment:
   EnforcedHashRocketStyle: table
   EnforcedColonStyle: table
 
-# Check with yard instead.
-Style/Documentation:
+Layout/LineLength:
+  Exclude:
+    - README.md
+    - benchmark/**/*
+
+Metrics/BlockLength:
+  Exclude:
+    - examples/**/*
+    - fix.gemspec
+
+Metrics/ParameterLists:
+  Max: 6
+
+Naming/FileName:
+  Exclude:
+    - CODE_OF_CONDUCT.md
+    - LICENSE.md
+    - README.md
+
+Style/ClassAndModuleChildren:
+  Exclude:
+    - README.md
+
+Naming/BlockForwarding:
+  Enabled: false
+
+Style/ArgumentsForwarding:
+  Enabled: false
+
+Naming/MethodParameterName:
   Enabled: false

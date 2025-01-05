@@ -2,94 +2,127 @@
 
 require "fix"
 
-# Namespace for the Matchi library.
 module Matchi
-  # **Fix** specing matcher.
+  # Specification conformance matcher that verifies objects against Fix test specifications.
+  #
+  # This matcher allows testing objects against Fix specifications, enabling verification
+  # of implementation conformance across different testing frameworks. It supports both
+  # anonymous specifications defined inline and named specifications registered with Fix.
+  # The matcher provides a bridge between Matchi's matcher interface and Fix's powerful
+  # specification system.
+  #
+  # @example Basic usage with anonymous specification
+  #   matcher = Matchi::Fix.new { it MUST be 42 }
+  #   matcher.match? { 42 }              # => true
+  #   matcher.match? { 41 }              # => false
+  #
+  # @example Using named specifications
+  #   # Define a Fix specification
+  #   Fix :Calculator do
+  #     on(:add, 2, 3) do
+  #       it MUST eq 5
+  #     end
+  #
+  #     on(:multiply, 2, 3) do
+  #       it MUST eq 6
+  #     end
+  #   end
+  #
+  #   # Test implementations
+  #   calculator = Calculator.new
+  #   matcher = Matchi::Fix.new(:Calculator)
+  #   matcher.match? { calculator }      # => true if calculator meets spec
+  #
+  # @example Complex specifications
+  #   Fix :UserValidator do
+  #     on(:validate, name: "Alice", age: 30) do
+  #       it MUST be true
+  #     end
+  #
+  #     on(:validate, name: "", age: -1) do
+  #       it MUST be false
+  #     end
+  #   end
+  #
+  #   validator = UserValidator.new
+  #   matcher = Matchi::Fix.new(:UserValidator)
+  #   matcher.match? { validator }       # => true if validation logic is correct
+  #
+  # @see https://github.com/fixrb/fix
+  # @see https://github.com/fixrb/matchi
   class Fix
-    # @return [#against] A set of specifications.
-    attr_reader :expected
-
-    # Initialize the matcher with a behavioral definition.
+    # Initialize the matcher with either a name or a specification block.
     #
-    # @example With a block of specifications
-    #   require "matchi/fix"
+    # @api public
     #
-    #   Matchi::Fix.new { it MUST be 42 }
+    # @param name [Symbol, nil] The name of a registered Fix specification
+    # @param block [Proc, nil] A block containing the specification
     #
-    # @example With the constant name of the specifications
-    #   require "matchi/fix"
+    # @raise [ArgumentError] if neither name nor block is provided
+    # @raise [ArgumentError] if both name and block are provided
+    # @raise [KeyError] if the named specification doesn't exist
     #
-    #   Fix :Answer do
-    #     it MUST be 42
-    #   end
+    # @return [Fix] a new instance of the matcher
     #
-    #   Matchi::Fix.new(:Answer)
+    # @example With anonymous specification
+    #   Fix.new { it MUST be_positive }
     #
-    # @param name   [String, Symbol]  The constant name of the specifications.
-    # @param block  [Proc]            A block of specifications.
+    # @example With named specification
+    #   Fix.new(:Calculator)
     def initialize(name = nil, &block)
-      @name = name
+      raise ::ArgumentError, "a name or a block must be provided" if name.nil? && block.nil?
+      raise ::ArgumentError, "a name or a block must be provided" if !name.nil? && !block.nil?
 
-      @expected = if unnamed?
-                    raise ::ArgumentError, "Pass either an argument or a block" unless block
-
-                    Fix(&block)
-                  else
-                    raise ::ArgumentError, "Can't pass both an argument and a block" if block
-
-                    ::Fix[name]
-                  end
+      @expected = name.nil? ? ::Fix.spec(&block) : ::Fix[name]
     end
 
-    # Boolean comparison between an actual value and the expected specs.
+    # Checks if the yielded object satisfies the Fix specification.
     #
-    # @example With a block of specifications
-    #   require "matchi/fix"
+    # This method executes the Fix specification against the provided object,
+    # verifying that all specified behaviors and conditions are met. It works
+    # with both anonymous and named specifications.
     #
-    #   matcher = Matchi::Fix.new { it MUST be 42 }
+    # @api public
     #
-    #   matcher.expected        # => #<Fix::Set:0x00007fd96915dc28 ...>
-    #   matcher.matches? { 42 } # => true
+    # @yield [] Block that returns the object to verify
+    # @yieldreturn [Object] The object to check against the specification
     #
-    # @example With the constant name of the specifications
-    #   require "matchi/fix"
+    # @return [Boolean] true if the object satisfies the specification
     #
-    #   Fix :Answer do
-    #     it MUST be 42
+    # @raise [ArgumentError] if no block is provided
+    #
+    # @example With anonymous specification
+    #   matcher = Fix.new { it MUST be_zero }
+    #   matcher.match? { 0 }             # => true
+    #   matcher.match? { 1 }             # => false
+    #
+    # @example With named specification
+    #   Fix :Sortable do
+    #     on(:sort) do
+    #       it MUST be_kind_of(Array)
+    #       it MUST be_sorted
+    #     end
     #   end
     #
-    #   matcher = Matchi::Fix.new(:Answer)
-    #
-    #   matcher.expected        # => #<Fix::Set:0x00007fd96915dc28 ...>
-    #   matcher.matches? { 42 } # => true
-    #
-    # @yieldreturn [#object_id] The value to be compared to the specifications.
-    #
-    # @return [Boolean] Determines whether the test has passed or failed.
-    def matches?(&block)
-      expected.against(log_level: 0, &block)
-    rescue ::SystemExit => e
-      e.success?
+    #   matcher = Fix.new(:Sortable)
+    #   matcher.match? { [1, 2, 3] }     # => true if array meets spec
+    def match?
+      raise ::ArgumentError, "a block must be provided" unless block_given?
+
+      @expected.match?(yield)
     end
 
-    # A string containing a human-readable representation of the matcher.
-    def inspect
-      "#{self.class}(#{parameter})"
-    end
-
-    # Returns a string representing the matcher.
+    # Returns a human-readable description of the matcher.
+    #
+    # @api public
+    #
+    # @return [String] A string describing what this matcher verifies
+    #
+    # @example
+    #   Fix.new(:Calculator).to_s # => "fix Calculator"
+    #   Fix.new { it MUST be 42 }.to_s # => "fix #<Fix::Spec:...>"
     def to_s
-      "fix #{parameter}"
-    end
-
-    private
-
-    def unnamed?
-      @name.nil?
-    end
-
-    def parameter
-      unnamed? ? "&specs" : ":#{@name}"
+      "fix #{@expected.inspect}"
     end
   end
 end

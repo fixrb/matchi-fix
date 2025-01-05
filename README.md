@@ -2,11 +2,9 @@
 
 [![Version](https://img.shields.io/github/v/tag/fixrb/matchi-fix?label=Version&logo=github)](https://github.com/fixrb/matchi-fix/releases)
 [![Yard documentation](https://img.shields.io/badge/Yard-documentation-blue.svg?logo=github)](https://rubydoc.info/github/fixrb/matchi-fix/main)
-[![CI](https://github.com/fixrb/matchi-fix/workflows/CI/badge.svg?branch=main)](https://github.com/fixrb/matchi-fix/actions?query=workflow%3Aci+branch%3Amain)
-[![RuboCop](https://github.com/fixrb/matchi-fix/workflows/RuboCop/badge.svg?branch=main)](https://github.com/fixrb/matchi-fix/actions?query=workflow%3Arubocop+branch%3Amain)
 [![License](https://img.shields.io/github/license/fixrb/matchi-fix?label=License&logo=github)](https://github.com/fixrb/matchi-fix/raw/main/LICENSE.md)
 
-> A [Fix](https://github.com/fixrb/fix) specing matcher compatible with [Matchi](https://github.com/fixrb/matchi).
+[Matchi](https://github.com/fixrb/matchi)-compatible matcher for testing implementations against [Fix](https://github.com/fixrb/fix) specifications.
 
 ## Installation
 
@@ -18,15 +16,23 @@ gem "matchi-fix"
 
 And then execute:
 
-```sh
-bundle
+```shell
+bundle install
 ```
 
-Or install it yourself as:
+Or install it yourself:
 
-```sh
+```shell
 gem install matchi-fix
 ```
+
+## Description
+
+A Matchi-compatible matcher that allows testing objects against Fix specifications.
+Enables verification of implementation conformance to Fix test specifications
+across different testing frameworks like Minitest and RSpec. Integrates seamlessly
+with the Fix testing framework's powerful specification system while maintaining
+Matchi's clean matcher interface.
 
 ## Usage
 
@@ -36,30 +42,47 @@ To make __Matchi::Fix__ available:
 require "matchi/fix"
 ```
 
-All examples here assume that this has been done.
-
-### With a block of specifications
+The Fix matcher allows testing values against Fix specifications. After requiring `matchi-fix`, you can use the `Fix` matcher in your tests through anonymous specification:
 
 ```ruby
-matcher = Matchi::Fix.new { it MUST be 42 }
-
-matcher.expected        # => #<Fix::Set:0x00007fd96915dc28 ...>
-matcher.matches? { 42 } # => true
+Matchi::Fix.new { it MUST be 42 }.match? { 42 } # => true
 ```
 
-### With the constant name of the specifications
-
-If specifications have been defined and named, they can be mentioned:
+or through registered specification by name:
 
 ```ruby
-Fix :Answer do
-  it MUST be 42
+# First, define a Fix specification
+Fix :Calculator do
+  on(:add, 2, 3) do
+    it MUST eq 5
+  end
+
+  on(:multiply, 2, 3) do
+    it MUST eq 6
+  end
 end
 
-matcher = Matchi::Fix.new(:Answer)
+# Then use the matcher to test implementations
+calculator = MyCalculator.new
 
-matcher.expected        # => #<Fix::Set:0x00007fd96915dc28 ...>
-matcher.matches? { 42 } # => true
+# Using direct matcher syntax
+Matchi::Fix.new(:Calculator).matches?(calculator) #=> true/false
+```
+
+### Error Handling
+
+On missing specifications:
+
+```ruby
+Matchi::Fix.new(:NonExistent)
+# => KeyError
+```
+
+On passing both specification name and specification code:
+
+```ruby
+Matchi::Fix.new(:SpecName) { "Spec block" }
+# => ArgumentError
 ```
 
 ## Contact
@@ -74,11 +97,6 @@ __Matchi::Fix__ follows [Semantic Versioning 2.0](https://semver.org/).
 
 The [gem](https://rubygems.org/gems/matchi-fix) is available as open source under the terms of the [MIT License](https://github.com/fixrb/matchi-fix/raw/main/LICENSE.md).
 
-***
+## Sponsors
 
-<p>
-  This project is sponsored by:<br />
-  <a href="https://sashite.com/"><img
-    src="https://github.com/fixrb/matchi-fix/raw/main/img/sashite.png"
-    alt="Sashite" /></a>
-</p>
+This project is sponsored by [Sashité](https://sashite.com/)
