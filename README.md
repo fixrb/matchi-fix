@@ -1,97 +1,60 @@
 # Matchi::Fix
 
-[![Version](https://img.shields.io/github/v/tag/fixrb/matchi-fix?label=Version&logo=github)](https://github.com/fixrb/matchi-fix/releases)
+[![Version](https://img.shields.io/github/v/tag/fixrb/matchi-fix?label=Version&logo=github)](https://github.com/fixrb/matchi-fix/tags)
 [![Yard documentation](https://img.shields.io/badge/Yard-documentation-blue.svg?logo=github)](https://rubydoc.info/github/fixrb/matchi-fix/main)
 [![License](https://img.shields.io/github/license/fixrb/matchi-fix?label=License&logo=github)](https://github.com/fixrb/matchi-fix/raw/main/LICENSE.md)
 
-[Matchi](https://github.com/fixrb/matchi)-compatible matcher for testing implementations against [Fix](https://github.com/fixrb/fix) specifications.
+Matchi::Fix is a matcher of [Matchi](https://github.com/fixrb/matchi) that tests a value against a specification of [Fix](https://github.com/fixrb/fix): `match?` is true when the value meets every expectation of the specification, registered under a name or written in a block. It brings the specifications of Fix wherever a matcher of Matchi goes: to [Spectus](https://github.com/fixrb/spectus), and to any test framework that takes one.
 
 ## Installation
 
-Add this line to your application's Gemfile:
-
 ```ruby
+# Gemfile
 gem "matchi-fix"
 ```
 
-And then execute:
-
-```shell
-bundle install
-```
-
-Or install it yourself:
-
-```shell
-gem install matchi-fix
-```
-
-## Description
-
-A Matchi-compatible matcher that allows testing objects against Fix specifications.
-Enables verification of implementation conformance to Fix test specifications
-across different testing frameworks like Minitest and RSpec. Integrates seamlessly
-with the Fix testing framework's powerful specification system while maintaining
-Matchi's clean matcher interface.
+Matchi::Fix requires Ruby 3.3 or later on a system with `fork`, and depends on [Fix](https://github.com/fixrb/fix).
 
 ## Usage
 
-To make __Matchi::Fix__ available:
-
 ```ruby
 require "matchi/fix"
-```
 
-The Fix matcher allows testing values against Fix specifications. After requiring `matchi-fix`, you can use the `Fix` matcher in your tests through anonymous specification:
-
-```ruby
-Matchi::Fix.new { it MUST be 42 }.match? { 42 } # => true
-```
-
-or through registered specification by name:
-
-```ruby
-# First, define a Fix specification
-Fix :Calculator do
-  on(:add, 2, 3) do
-    it MUST eq 5
+Fix :Duck do
+  on :walk do
+    it MUST eq "Klop klop!"
   end
 
-  on(:multiply, 2, 3) do
-    it MUST eq 6
+  on :swim do
+    it MUST eq "Swoosh..."
   end
 end
 
-# Then use the matcher to test implementations
-calculator = MyCalculator.new
+class Duck
+  def walk = "Klop klop!"
+  def swim = "Swoosh..."
+end
 
-# Using direct matcher syntax
-Matchi::Fix.new(:Calculator).matches?(calculator) #=> true/false
+matcher = Matchi::Fix.new(:Duck)
+matcher.match? { Duck.new } # => true
+matcher.match? { "a decoy" } # => false
+matcher.to_s # => "fix Duck"
+
+Matchi::Fix.new { it MUST be_a_kind_of Numeric }.match? { 42 } # => true
+Matchi::Fix.new { it MUST be_a_kind_of Numeric }.to_s # => "fix an anonymous specification"
+
+Spectus.must(matcher).call { "a decoy" }.to_s # => "Failure: expected \"a decoy\" to fix Duck"
 ```
 
-### Error Handling
+`Matchi::Fix.new(:Name)` finds the specification registered by `Fix :Name do … end`, and raises `KeyError` when there is none; `Matchi::Fix.new { … }` builds one from the block, as `Fix do … end` does. Given both a name and a block, or neither, it raises `ArgumentError`. The specification is found or built once, when the matcher is.
 
-On missing specifications:
+`match?` calls its block once, where it is called, and the value is the subject of every expectation, each context of the specification running in a child process, as Fix does it. It answers `true` when every expectation passes, a warning or an info included, and `false` when one fails or errors, without saying which: `Fix[:Name].test { … }` says which. What is not an outcome of an expectation is raised: an `Interrupt`, a child that died, a Ruby without `fork`. Since the value is given once, the contexts cannot build it anew with their lets: a specification meant for a matcher is written without `with`.
 
-```ruby
-Matchi::Fix.new(:NonExistent)
-# => KeyError
-```
-
-On passing both specification name and specification code:
-
-```ruby
-Matchi::Fix.new(:SpecName) { "Spec block" }
-# => ArgumentError
-```
-
-## Contact
-
-* Source code: https://github.com/fixrb/matchi-fix
+A `Fix::Spec` is a matcher already: `Matchi::Fix.new(:Duck)` and `Fix[:Duck]` answer the same `match?` and `to_s`, and inside a specification of Fix the word `fix(:Duck)` is that matcher. The class is the word of Matchi for it, for the other frameworks, taking the name or the block as the other matchers of Matchi take their expected value.
 
 ## Versioning
 
-__Matchi::Fix__ follows [Semantic Versioning 2.0](https://semver.org/).
+Matchi::Fix follows [Semantic Versioning 2.0](https://semver.org/).
 
 ## License
 

@@ -1,65 +1,40 @@
+# The target Ruby version is read from `required_ruby_version` in the gemspec.
 AllCops:
   NewCops: enable
-  TargetRubyVersion: 3.1
 
-  Exclude:
-    - '**/*.md'
-    - '**/*.markdown'
-    - 'benchmark/**/*'
-    - 'spec/**/*'
-    - 'vendor/**/*'
-
-require:
+plugins:
   - rubocop-md
   - rubocop-performance
   - rubocop-rake
   - rubocop-thread_safety
-
-Style/StringLiterals:
-  Enabled: true
-  EnforcedStyle: double_quotes
-
-Style/StringLiteralsInInterpolation:
-  Enabled: true
-  EnforcedStyle: double_quotes
-
-# We do not need to support Ruby 1.9, so this is good to use.
-Style/SymbolArray:
-  Enabled: true
 
 # Most readable form.
 Layout/HashAlignment:
   EnforcedHashRocketStyle: table
   EnforcedColonStyle: table
 
-Layout/LineLength:
+# The tests are a flat list of `raise unless …` checks, each one a sentence:
+# an empty line after each would double their length for nothing.
+Layout/EmptyLineAfterGuardClause:
   Exclude:
-    - README.md
-    - benchmark/**/*
+    - test/**/*
 
-Metrics/BlockLength:
-  Exclude:
-    - examples/**/*
-    - fix.gemspec
+# Every class, module and method of the library carries a comment; YARD
+# (`--fail-on-warning` in .yardopts) checks that its tags match the code.
+# Enabled explicitly: the next major release of RuboCop is expected to
+# disable `Style/Documentation` by default.
+Style/Documentation:
+  Enabled: true
+  Include:
+    - lib/**/*.rb
 
-Metrics/ParameterLists:
-  Max: 6
+Style/DocumentationMethod:
+  Enabled: true
+  Include:
+    - lib/**/*.rb
 
-Naming/FileName:
-  Exclude:
-    - CODE_OF_CONDUCT.md
-    - LICENSE.md
-    - README.md
+Style/StringLiterals:
+  EnforcedStyle: double_quotes
 
-Style/ClassAndModuleChildren:
-  Exclude:
-    - README.md
-
-Naming/BlockForwarding:
-  Enabled: false
-
-Style/ArgumentsForwarding:
-  Enabled: false
-
-Naming/MethodParameterName:
-  Enabled: false
+Style/StringLiteralsInInterpolation:
+  EnforcedStyle: double_quotes

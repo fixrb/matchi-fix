@@ -2,150 +2,48 @@
 
 require_relative File.join("support", "coverage")
 require_relative File.join("..", "lib", "matchi", "fix")
+require_relative File.join("support", "helpers")
 
-#
-# Test anonymous specifications
-#
+# A name finds the registered specification; a block builds one.
+Fix(:MatchiFixTestPositive) { on(:positive?) { it MUST be_true } }
+named = Matchi::Fix.new(:MatchiFixTestPositive)
+raise unless named.match? { 1 }.equal?(true)
+raise unless named.match? { -1 }.equal?(false)
+raise unless named.match? { "one" }.equal?(false)
+raise unless named.to_s == "fix MatchiFixTestPositive"
+anonymous = Matchi::Fix.new { it MUST eq 1 }
+raise unless anonymous.match? { 1 }.equal?(true)
+raise unless anonymous.match? { 2 }.equal?(false)
+raise unless anonymous.to_s == "fix an anonymous specification"
 
-# Test basic value matching
-matcher = Matchi::Fix.new { it MUST be 42 }
-raise unless matcher.match? { 42 }
-raise if matcher.match? { 41 }
+# The block of match? is called once, with the value as the subject of
+# every expectation; without a block, ArgumentError.
+calls = 0
+twice = Matchi::Fix.new { it MUST eq 1; on(:succ) { it MUST eq 2 } } # rubocop:disable Style/Semicolon
+raise unless twice.match? { calls += 1 }.equal?(true) && calls == 1
+error = raised { twice.match? }
+raise unless error.instance_of?(ArgumentError) && error.message == "a block must be given"
 
-# Test with predicates
-matcher = Matchi::Fix.new { it MUST be_zero }
-raise unless matcher.match? { 0 }
-raise if matcher.match? { 1 }
+# A name or a block, not both, and the name of a registered specification.
+error = raised { Matchi::Fix.new }
+raise unless error.instance_of?(ArgumentError) && error.message == "a name or a block must be given, not both"
+error = raised { Matchi::Fix.new(:MatchiFixTestPositive) { it MUST eq 1 } }
+raise unless error.instance_of?(ArgumentError) && error.message == "a name or a block must be given, not both"
+error = raised { Matchi::Fix.new(:MatchiFixTestMissing) }
+raise unless error.instance_of?(KeyError) && error.key == :MatchiFixTestMissing
 
-# Test with multiple conditions
-matcher = Matchi::Fix.new do
-  it MUST be_kind_of(Numeric)
-  it MUST be_positive
-end
-raise unless matcher.match? { 42 }
-raise if matcher.match? { -42 }
-raise if matcher.match? { "42" }
+# The matcher works where a matcher of Matchi does: in Spectus, and in Fix.
+raise unless Spectus.must(named).call { 1 }.to_s == "Success: expected 1 to fix MatchiFixTestPositive"
+raise unless Fix.spec { it MUST Matchi::Fix.new(:MatchiFixTestPositive) }.run { 1 }.first.passed?
 
-#
-# Test named specifications
-#
+# What is not an outcome of an expectation is raised; the block of match? runs
+# where match? is called, the contexts in children.
+raise unless raised { named.match? { raise Interrupt } }.instance_of?(Interrupt)
+dying = Matchi::Fix.new { on(:call) { it MUST eq 1 } }
+raise unless raised { dying.match? { -> { exit! 2 } } }.instance_of?(Aw::ChildError)
+parent = Process.pid
+forked = Matchi::Fix.new { it MUST(satisfy { |pid| pid == parent && Process.pid != parent }) }
+raise unless forked.match? { Process.pid }.equal?(true)
 
-# Create a test class for named specifications
-class Calculator
-  def add(a, b)
-    a + b
-  end
-
-  def multiply(a, b)
-    a * b
-  end
-end
-
-# Define named specification
-Fix :Calculator do
-  on(:add, 2, 3) do
-    it MUST eq 5
-  end
-
-  on(:multiply, 2, 3) do
-    it MUST eq 6
-  end
-end
-
-# Test with correct implementation
-calculator = Calculator.new
-matcher = Matchi::Fix.new(:Calculator)
-raise unless matcher.match? { calculator }
-
-# Test with incorrect implementation
-class BadCalculator
-  def add(a, b)
-    a - b
-  end
-
-  def multiply(a, b)
-    a + b
-  end
-end
-
-bad_calculator = BadCalculator.new
-raise if matcher.match? { bad_calculator }
-
-#
-# Test edge cases and error conditions
-#
-
-# Test missing specification name
-begin
-  Matchi::Fix.new(:NonExistentSpec)
-  raise "Should raise KeyError for non-existent specification"
-rescue KeyError
-  # Expected
-end
-
-# Test with no arguments
-begin
-  Matchi::Fix.new
-  raise "Should raise ArgumentError when no name or block given"
-rescue ArgumentError => e
-  raise unless e.message == "a name or a block must be provided"
-end
-
-# Test with both name and block
-begin
-  Matchi::Fix.new(:Calculator) { it MUST be true }
-  raise "Should raise ArgumentError when both name and block given"
-rescue ArgumentError => e
-  raise unless e.message == "a name or a block must be provided"
-end
-
-# Test match? without block
-begin
-  matcher = Matchi::Fix.new { it MUST be true }
-  matcher.match?
-  raise "Should raise ArgumentError when no block given to match?"
-rescue ArgumentError => e
-  raise unless e.message == "a block must be provided"
-end
-
-#
-# Test complex specifications
-#
-
-# Test with nested conditions
-matcher = Matchi::Fix.new do
-  it MUST be_kind_of(Array)
-  it MUST all_be_kind_of(Integer)
-  it MUST be_sorted
-end
-
-class ArrayWithHelpers < Array
-  def all_be_kind_of(type)
-    all?(type)
-  end
-
-  def be_sorted
-    sorted? == self
-  end
-end
-
-good_array = ArrayWithHelpers[1, 2, 3]
-bad_array = ArrayWithHelpers[3, 1, 2]
-mixed_array = ArrayWithHelpers[1, "2", 3]
-
-raise unless matcher.match? { good_array }
-raise if matcher.match? { bad_array }
-raise if matcher.match? { mixed_array }
-raise if matcher.match? { "not an array" }
-
-#
-# Test string representations
-#
-
-# Test with named specification
-matcher = Matchi::Fix.new(:Calculator)
-raise unless matcher.to_s.start_with?("fix #<Fix::Spec:")
-
-# Test with anonymous specification
-matcher = Matchi::Fix.new { it MUST be true }
-raise unless matcher.to_s.start_with?("fix #<Fix::Spec:")
+# The public surface: a constructor, match? and to_s.
+raise unless Matchi::Fix.public_instance_methods(false).sort == %i[match? to_s]

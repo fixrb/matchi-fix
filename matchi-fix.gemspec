@@ -1,28 +1,23 @@
 # frozen_string_literal: true
 
 Gem::Specification.new do |spec|
-  spec.name         = "matchi-fix"
-  spec.version      = File.read("VERSION.semver").chomp
-  spec.author       = "Cyril Kato"
-  spec.email        = "contact@cyril.email"
-  spec.summary      = "Matcher for testing implementations against Fix specifications."
+  spec.name                   = "matchi-fix"
+  spec.version                = File.read(File.join(__dir__, "VERSION.semver")).chomp
+  spec.author                 = "Cyril Kato"
+  spec.email                  = "contact@cyril.email"
+  spec.summary                = "A matcher of Matchi that tests a value against a specification of Fix"
+  spec.description            = "Matchi::Fix tests a value against a specification of Fix, registered under a name " \
+                                "or written in a block: match? is true when the value meets every expectation. " \
+                                "It brings the specifications of Fix wherever a matcher of Matchi goes."
+  spec.homepage               = "https://fixrb.dev/gems/matchi-fix/"
+  spec.license                = "MIT"
+  spec.files                  = Dir["LICENSE.md", "README.md", "lib/**/*.rb", base: __dir__]
+  spec.required_ruby_version  = ">= 3.3.0"
 
-  spec.description  = <<~DESC
-    A Matchi-compatible matcher that allows testing objects against Fix specifications. Enables verification of implementation conformance to Fix test specifications across different testing frameworks like Minitest and RSpec. Integrates seamlessly with the Fix testing framework's powerful specification system while maintaining Matchi's clean matcher interface.
-  DESC
+  spec.metadata["bug_tracker_uri"]       = "https://github.com/fixrb/matchi-fix/issues"
+  spec.metadata["documentation_uri"]     = "https://rubydoc.info/gems/matchi-fix"
+  spec.metadata["rubygems_mfa_required"] = "true"
+  spec.metadata["source_code_uri"]       = "https://github.com/fixrb/matchi-fix"
 
-  spec.homepage     = "https://github.com/fixrb/matchi-fix"
-  spec.license      = "MIT"
-  spec.files        = Dir["LICENSE.md", "README.md", "lib/**/*"]
-
-  spec.required_ruby_version = ">= 3.1.0"
-
-  spec.metadata = {
-    "bug_tracker_uri"       => "https://github.com/fixrb/matchi-fix/issues",
-    "documentation_uri"     => "https://rubydoc.info/gems/matchi-fix",
-    "source_code_uri"       => "https://github.com/fixrb/matchi-fix",
-    "rubygems_mfa_required" => "true"
-  }
-
-  spec.add_dependency "fix", "~> 0.21"
+  spec.add_dependency "fix", "~> 1.0"
 end

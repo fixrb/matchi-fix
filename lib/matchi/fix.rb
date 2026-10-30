@@ -2,127 +2,42 @@
 
 require "fix"
 
+# The matchers of Matchi: this gem adds {Matchi::Fix} to them.
 module Matchi
-  # Specification conformance matcher that verifies objects against Fix test specifications.
+  # A matcher of Matchi that tests a value against a specification of Fix,
+  # registered under a name or written in the block: `match?` is true when
+  # the value meets every expectation of the specification.
   #
-  # This matcher allows testing objects against Fix specifications, enabling verification
-  # of implementation conformance across different testing frameworks. It supports both
-  # anonymous specifications defined inline and named specifications registered with Fix.
-  # The matcher provides a bridge between Matchi's matcher interface and Fix's powerful
-  # specification system.
-  #
-  # @example Basic usage with anonymous specification
-  #   matcher = Matchi::Fix.new { it MUST be 42 }
-  #   matcher.match? { 42 }              # => true
-  #   matcher.match? { 41 }              # => false
-  #
-  # @example Using named specifications
-  #   # Define a Fix specification
-  #   Fix :Calculator do
-  #     on(:add, 2, 3) do
-  #       it MUST eq 5
-  #     end
-  #
-  #     on(:multiply, 2, 3) do
-  #       it MUST eq 6
-  #     end
-  #   end
-  #
-  #   # Test implementations
-  #   calculator = Calculator.new
-  #   matcher = Matchi::Fix.new(:Calculator)
-  #   matcher.match? { calculator }      # => true if calculator meets spec
-  #
-  # @example Complex specifications
-  #   Fix :UserValidator do
-  #     on(:validate, name: "Alice", age: 30) do
-  #       it MUST be true
-  #     end
-  #
-  #     on(:validate, name: "", age: -1) do
-  #       it MUST be false
-  #     end
-  #   end
-  #
-  #   validator = UserValidator.new
-  #   matcher = Matchi::Fix.new(:UserValidator)
-  #   matcher.match? { validator }       # => true if validation logic is correct
-  #
-  # @see https://github.com/fixrb/fix
-  # @see https://github.com/fixrb/matchi
+  # @example
+  #   Matchi::Fix.new(:Duck).match? { Duck.new } # => true
+  #   Matchi::Fix.new { it MUST eq 42 }.to_s     # => "fix an anonymous specification"
   class Fix
-    # Initialize the matcher with either a name or a specification block.
-    #
-    # @api public
-    #
-    # @param name [Symbol, nil] The name of a registered Fix specification
-    # @param block [Proc, nil] A block containing the specification
-    #
-    # @raise [ArgumentError] if neither name nor block is provided
-    # @raise [ArgumentError] if both name and block are provided
-    # @raise [KeyError] if the named specification doesn't exist
-    #
-    # @return [Fix] a new instance of the matcher
-    #
-    # @example With anonymous specification
-    #   Fix.new { it MUST be_positive }
-    #
-    # @example With named specification
-    #   Fix.new(:Calculator)
+    # @param name [Symbol, nil] the name of a registered specification
+    # @yield the document of an anonymous specification, instead of a name
+    # @raise [ArgumentError] with both a name and a block, or neither
+    # @raise [KeyError] when no specification has that name
     def initialize(name = nil, &block)
-      raise ::ArgumentError, "a name or a block must be provided" if name.nil? && block.nil?
-      raise ::ArgumentError, "a name or a block must be provided" if !name.nil? && !block.nil?
+      raise ::ArgumentError, "a name or a block must be given, not both" if name.nil? == block.nil?
 
-      @expected = name.nil? ? ::Fix.spec(&block) : ::Fix[name]
+      @spec = name.nil? ? ::Fix.spec(&block) : ::Fix[name]
     end
 
-    # Checks if the yielded object satisfies the Fix specification.
+    # Tests a value: the block is called once, and its value is the subject
+    # of every expectation, each context in a child process.
     #
-    # This method executes the Fix specification against the provided object,
-    # verifying that all specified behaviors and conditions are met. It works
-    # with both anonymous and named specifications.
-    #
-    # @api public
-    #
-    # @yield [] Block that returns the object to verify
-    # @yieldreturn [Object] The object to check against the specification
-    #
-    # @return [Boolean] true if the object satisfies the specification
-    #
-    # @raise [ArgumentError] if no block is provided
-    #
-    # @example With anonymous specification
-    #   matcher = Fix.new { it MUST be_zero }
-    #   matcher.match? { 0 }             # => true
-    #   matcher.match? { 1 }             # => false
-    #
-    # @example With named specification
-    #   Fix :Sortable do
-    #     on(:sort) do
-    #       it MUST be_kind_of(Array)
-    #       it MUST be_sorted
-    #     end
-    #   end
-    #
-    #   matcher = Fix.new(:Sortable)
-    #   matcher.match? { [1, 2, 3] }     # => true if array meets spec
-    def match?
-      raise ::ArgumentError, "a block must be provided" unless block_given?
-
-      @expected.match?(yield)
+    # @yieldreturn [Object] the value
+    # @return [Boolean] whether the specification is met
+    # @raise [ArgumentError] without a block
+    # @raise [NotImplementedError] when this Ruby cannot fork
+    # @raise [Aw::ChildError] when a child died or delivered no result; what a
+    #   child raised outside an expectation is raised here again
+    def match?(&)
+      @spec.match?(&)
     end
 
-    # Returns a human-readable description of the matcher.
-    #
-    # @api public
-    #
-    # @return [String] A string describing what this matcher verifies
-    #
-    # @example
-    #   Fix.new(:Calculator).to_s # => "fix Calculator"
-    #   Fix.new { it MUST be 42 }.to_s # => "fix #<Fix::Spec:...>"
+    # @return [String] `fix NAME`, or `fix an anonymous specification`
     def to_s
-      "fix #{@expected.inspect}"
+      @spec.to_s
     end
   end
 end
