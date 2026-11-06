@@ -6,6 +6,8 @@
 
 Matchi::Fix is a matcher of [Matchi](https://github.com/fixrb/matchi) that tests a value against a specification of [Fix](https://github.com/fixrb/fix): `match?` is true when the value meets every expectation of the specification, registered under a name or written in a block. It brings the specifications of Fix wherever a matcher of Matchi goes: to [Spectus](https://github.com/fixrb/spectus), and to any test framework that takes one.
 
+[fixrb.dev](https://fixrb.dev/gems/matchi-fix/) presents the gem, and the guide of Fix shows it in [Composing specifications](https://fixrb.dev/gems/fix/v1/composing-specifications/).
+
 ## Installation
 
 ```ruby
