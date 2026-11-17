@@ -1,7 +1,7 @@
 # Matchi::Fix
 
 [![Version](https://img.shields.io/github/v/tag/fixrb/matchi-fix?label=Version&logo=github)](https://github.com/fixrb/matchi-fix/tags)
-[![Yard documentation](https://img.shields.io/badge/Yard-documentation-blue.svg?logo=github)](https://rubydoc.info/github/fixrb/matchi-fix/main)
+[![Yard documentation](https://img.shields.io/badge/Yard-documentation-blue.svg?logo=github)](https://gemdocs.org/gems/matchi-fix/latest/)
 [![License](https://img.shields.io/github/license/fixrb/matchi-fix?label=License&logo=github)](https://github.com/fixrb/matchi-fix/raw/main/LICENSE.md)
 
 Matchi::Fix is a matcher of [Matchi](https://github.com/fixrb/matchi) that tests a value against a specification of [Fix](https://github.com/fixrb/fix): `match?` is true when the value meets every expectation of the specification, registered under a name or written in a block. It brings the specifications of Fix wherever a matcher of Matchi goes: to [Spectus](https://github.com/fixrb/spectus), and to any test framework that takes one.
